@@ -1,0 +1,85 @@
+<!doctype>
+<html>
+<head>
+
+    <title>Simple Example of using Monster</title>
+
+    <link rel="stylesheet" href="../lib/css/reset.css">
+    <link rel="stylesheet" href="../lib/css/text.css">
+    <link rel="stylesheet" href="../lib/css/960.css">
+
+    <link rel="stylesheet" href="../lib/css/ui-lightness/jquery-ui-1.8.20.custom.css">
+    <link rel="stylesheet" href="../src/css/monster.css">
+
+    <style>
+
+        body {
+            font-size: 12px;
+            font-family: Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        #container {
+            margin: 50px auto;
+            width: 960px;
+        }
+
+        h1 {
+            font-size: 28px;
+            line-height: 1;
+            margin: 0 0 1em;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id="container">
+
+    <div id="contents-primary">
+
+        <h1 m:widget="Line" m:title="Page Title">Heading 1</h1>
+
+        <div>
+            <a m:widget="LinkedImage" href="#"><img src="http://placekitten.com/300/300" /></a>
+        </div>
+
+        <div m:widget="Markdown">Content</div>
+
+        <div m:widget="Container">
+            <div m:widget="Block" m:label="Block 1">
+                <h6>Not editable</h6>
+                <h2 m:widget="Line" m:title="Heading 2">Heading 2</h2>
+                <a m:widget="LinkedImage" href="#"><img src="http://placekitten.com/100/100" /></a>
+            </div>
+
+            <div m:widget="Block" m:label="Block 2">
+                <h6>Not editable</h6>
+                <h2 m:widget="Line" m:title="Heading 2">Heading 2</h2>
+
+                <div m:widget="Container">
+                    <div m:widget="Block" m:label="Subblock 1">
+                        <h6>Not editable</h6>
+                        <h3 m:widget="Line" m:title="Heading 2">Heading 2</h3>
+                        <a m:widget="LinkedImage" href="#"><img src="http://placekitten.com/50/50" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="data">Data</button>
+    <button id="render">Render</button>
+
+    <div id="render-target">
+
+    </div>
+
+</div>
+
+<script data-main="js/main" src="../lib/js/require-jquery.js"></script>
+
+</body>
+</html>
