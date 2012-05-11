@@ -7,11 +7,9 @@ define ['jquery', 'jquery.monster', 'cs!monster'], ($, jqm, monster) ->
 
     editor = new monster.Editor(node, data)
 
-    ###
     $('button#data').click ->
       console.log($.toJSON(editor.get_data()))
 
     $('button#render').click ->
       editor.render ->
         $('#render-target').html(node)
-    ###
