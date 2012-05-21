@@ -50,9 +50,9 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
       @node.sortable
         handle: 'span.move'
         scroll: true
-        cursorAt: 'bottom'
+        #cursorAt: 'bottom'
         tolerance: 'pointer'
-        containment: 'parent'
+        #containment: 'parent'
         items: ':widget'
 
       handler.on 'click', 'span.add', (event) =>
@@ -64,7 +64,7 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
         new_node.fadeIn(400)
 
     get_data: ->
-      @node.widgets().map (i, elem) =>
+      $.map @node.widgets(), (elem, i) =>
         @editor.data_for_node $(elem)
 
     render: ->
@@ -102,10 +102,10 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
       handler = $("""
         <div class="ui-widget-header ui-helper-clearfix ui-corner-all" style="z-index: 9999; position: absolute; top: -2px; right: -2px; width: 32px; height: 16px; padding: 2px;">
           <span class="move ui-corner-all">
-            <span class="ui-icon ui-icon-arrow-4">Move</span>
+            <span style="position: absolute; left: 1; top: 1;" class="ui-icon ui-icon-arrow-4">Move</span>
           </span>
           <span class="delete ui-corner-all">
-            <span class="ui-icon ui-icon-trash">Remove</span>
+            <span style="position: absolute; left: 17px; top: 1;" class="ui-icon ui-icon-trash">Remove</span>
           </span>
         </div>
       """)
