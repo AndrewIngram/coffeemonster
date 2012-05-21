@@ -9,15 +9,19 @@ define ['jquery'], ($) ->
       @callbacks[0]()
 
     set_value: (data) ->
-      return @callback[1](data)
+      return @callbacks[1](data)
 
     prepare: ->
       html = """
-        <label for="dialog-field-#{ @data_name }">#{ @verbose_name}</label>
+        <label for="dialog-field-#{ @data_name }">#{ @verbose_name }</label>
         <input name="dialog-field-#{ @data_name }"></input>
       """
       data = @get_value()
       @field_node = $(html)
+
+      if data
+        @field_node.filter('input').val(data)
+
       return @field_node
 
     write: ->

@@ -1,6 +1,7 @@
 define ['jquery', 'cs!widgets'], ($, widgets) ->
   class Editor
-    constructor: (@node, @data, @template) ->
+    constructor: (@node, @data) ->
+      @template = @node.html()
       @node.widgets().each (i, elem) =>
         data = if @data then @data[i] else null
         node = $(elem)
@@ -9,7 +10,6 @@ define ['jquery', 'cs!widgets'], ($, widgets) ->
     editor_for_node: (node, data) ->
       widget_name = node.attr('m:widget')
       widget = widgets[widget_name]
-
       node.data('widget', new widget(this, node, data))
 
     data_for_node: (node) ->
@@ -27,8 +27,12 @@ define ['jquery', 'cs!widgets'], ($, widgets) ->
         result.push(data)
       return result
 
-    render: (callback) ->
-      duplicate = $('<div>#{@template}</div>')
+    render: (callback) =>
+      html = """
+         <div>#{ @template }</div>
+      """
+
+      duplicate = $(html)
       temp_widgets = duplicate.widgets()
 
       @node.widgets().each (i, elem) =>
