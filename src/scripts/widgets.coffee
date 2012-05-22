@@ -1,13 +1,13 @@
-define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, fields) ->
+define ['jquery', '../../lib/js/jquery.jeditable', '../../lib/js/showdown', 'cs!fields'], ($, jeditable, showdown, fields) ->
   class Widget
     constructor: (@editor, @node, @data) ->
       @clean_html = @node.outerHTML()
 
     get_data: ->
-      # This should be completed for each subclass
+      @node.html()
 
     render: ->
-      # This should be completed for each subclass
+      @node.outerHTML()
 
 
   class Container extends Widget
@@ -30,7 +30,7 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
         @node.append(temp)
         @editor.editor_for_node(temp, null)
 
-      select = $('<select>')
+      select = $('<select style="float: left">')
 
       for temp, i in @block_options
         option = $('<option>')
@@ -52,8 +52,10 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
         scroll: true
         #cursorAt: 'bottom'
         tolerance: 'pointer'
-        #containment: 'parent'
+        containment: 'parent'
         items: ':widget'
+        forcePlaceholderSize: true
+        placeholder: 'ui-state-highlight'
 
       handler.on 'click', 'span.add', (event) =>
         event.preventDefault()
@@ -157,7 +159,7 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
       @fields = {}
 
     constructor: (@editor, @node, @data) ->
-
+      super
       @init_fields()
 
       @node.on 'click', (event) =>
@@ -196,34 +198,37 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
     get_title: ->
       return @title
 
-    render: ->
-      return @node.outerHTML()
+    get_data: ->
+      result = {}
+      for name, field of @fields
+        result[field.data_name] = field.get_value()
+      return result
 
 
-  class LinkedLine extends DialogWidget
-    title: 'Linked Image'
+  class LinkedHeading extends DialogWidget
+    title: 'Linked Heading'
 
     init_fields: ->
       @fields =
         text: new fields.TextField
           verbose_name: "Text"
           callbacks: [
-            => @node.html()
-            (data) => @node.html(data)
+            => @node.find('a').html()
+            (data) => @node.find('a').html(data)
           ]
           data_name: "text"
         href: new fields.TextField
           verbose_name: "Link URL"
           callbacks: [
-            => @node.attr('href')
-            (data) => @node.attr('href', data)
+            => @node.find('a').attr('href')
+            (data) => @node.find('a').attr('href', data)
           ]
           data_name: 'href'
         title: new fields.TextField
           verbose_name: "Link Title"
           callbacks: [
-            => @node.attr("title")
-            (data) => @node.attr('title', data)
+            => @node.find('a').attr("title")
+            (data) => @node.find('a').attr('title', data)
           ]
           data_name: "title"
 
@@ -271,6 +276,8 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
     constructor: (@editor, @node, @data) ->
       super
       @node.html(@data) if @data
+      @node.attr('contentEditable', 'true')
+
       @node.editable(
         (value, settings) -> return value
         ->
@@ -283,11 +290,41 @@ define ['jquery', '../../lib/js/jquery.jeditable', 'cs!fields'], ($, jeditable, 
       @node.outerHTML()
 
 
+  class Markdown extends Widget
+    constructor: (@editor, @node, @data) ->
+      super
+      @converter = new showdown.Showdown.converter()
+      @node.html(converter.makeHtml(@data)) if @data
+
+      @node.on 'click', (event) =>
+        event.preventDefault()
+        event.stopPropagation()
+
+        container = $('<textarea>Enter text...</textarea>')
+        container.text(@data)
+
+        container.dialog
+          title: 'Markdown Text'
+          modal: true
+          width: 640
+          height: 480
+          resizable: false
+          draggable: false
+          buttons:
+            Ok: (event) =>
+              @data = container.val()
+              @node.html(@converter.makeHtml(@data))
+              container.dialog 'close'
+            Cancel: (event) =>
+              container.dialog 'close'
+
+
   return {
     Container: Container
     Block: Block
     DialogWidget: DialogWidget
-    LinkedLine: LinkedLine
+    LinkedHeading: LinkedHeading
     LinkedImage: LinkedImage
     Line: Line
+    Markdown: Markdown
   }
