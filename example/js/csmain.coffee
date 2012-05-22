@@ -8,5 +8,5 @@ define ['jquery', 'jqueryui', 'jqjson', 'jquery.monster', 'cs!monster'], ($, jqu
       console.log editor.get_data()
 
     $('button#render').click ->
-      editor.render (node) ->
-        $('#render-target').html(node)
+      editor.render (html) ->
+        $('#render-target').html(html)
