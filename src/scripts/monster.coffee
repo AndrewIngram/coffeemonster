@@ -27,9 +27,14 @@ define ['jquery', 'cs!widgets'], ($, widgets) ->
         result.push(data)
       return result
 
-    render: (callback) =>
+    render: (callback, template=null) =>
+      if template
+        new_template = template
+      else
+        new_template = @template
+
       html = """
-         <div>#{ @template }</div>
+         <div>#{ new_template }</div>
       """
 
       duplicate = $(html)
